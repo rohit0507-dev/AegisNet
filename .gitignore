@@ -1,0 +1,35 @@
+# Python virtual environment
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE
+.vscode/
+
+# Environment variables
+.env
+.env.*
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+*.db-wal
+*.db-shm
+
+# Generated evaluation data
+data/evaluation/
+
+# Generated ML models
+data/ml/models/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
