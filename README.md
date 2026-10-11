@@ -1,10 +1,18 @@
+
+
+<img width="1918" height="984" alt="03_Traffic_Records" src="https://github.com/user-attachments/assets/43c30b85-72c3-4ca8-b11c-f4d3de40d81f" />
 # AegisNet — Computer Networks project
 
 **Real-Time Network Traffic Monitoring and Intrusion Detection System**
 
 | Team member | Registration number |
 | --- | --- |
-| Bhumireddi Rohit | 24BDS0387 |
+| Bhumireddi Rohit | 24BDS0387 |<img width="1918" height="984" alt="02_Dashboard" src="https://github.com/user-attachments/assets/2e81ab00-3a1f-4bac-bb1d-ec1a78086411" />
+<img width="1918" height="984" alt="01_Homepage" src="https://github.com/user-attachments/assets/15268c7d-a5f4-4920-a795-f87ddd5960ec" />
+<img width="1918" height="984" alt="06_Project_Details" src="https://github.com/user-attachments/assets/f11bf8bf-6be2-41f7-96e6-4613cd8820e8" />
+<img width="1918" height="984" alt="05_Tools_Results" src="https://github.com/user-attachments/assets/7d1a7aac-c232-4de0-99dd-07eb50a80700" />
+<img width="1918" height="984" alt="04_Network_Tools" src="https://github.com/user-attachments/assets/522f94aa-53e3-48ea-b86b-db5eac233738" />
+
 | Parth Batra | 24BDS0416 |
 | Somya Raj Singh Dalawat | 24BCE3001 |
 
