@@ -1,6 +1,11 @@
 import traceback
+import threading
+import time
+import warnings
+from app.capture.runtime import STOP_FILE, write_status
+from sklearn.exceptions import InconsistentVersionWarning
 
-from scapy.all import sniff, conf
+from scapy.all import AsyncSniffer, conf
 
 from app.analysis.flow_engine import FlowEngine
 from app.analysis.window_manager import WindowManager
@@ -22,19 +27,23 @@ from app.response.response_controller import ResponseController
 from app.database.database import Database
 
 
-CAPTURE_INTERFACE_INDEX = 16
 WINDOW_SECONDS = 5
 
 
 class PacketCapture:
 
-    def __init__(self):
+    def __init__(self, interface=None):
 
         print("[INIT] Initializing AegisNet...")
 
-        self.interface = conf.ifaces.dev_from_index(
-            CAPTURE_INTERFACE_INDEX
-        )
+        if interface is None:
+            self.interface = conf.iface
+        elif str(interface).isdigit():
+            self.interface = conf.ifaces.dev_from_index(int(interface))
+        else:
+            self.interface = conf.ifaces.dev_from_name(interface)
+        self._packet_lock = threading.RLock()
+
 
         print(
             f"[CAPTURE] Interface: {self.interface.name}"
@@ -71,12 +80,14 @@ class PacketCapture:
         self.database = Database()
 
         self.packet_count = 0
-        self.window_id = 0
+        self.window_id = self.database.connection.execute("SELECT COALESCE(MAX(window_id),0) FROM flow_records").fetchone()[0]
         self.ml_model_loaded = False
 
         try:
 
-            self.ml_detector.load_model()
+            with warnings.catch_warnings():
+                warnings.simplefilter("error", InconsistentVersionWarning)
+                self.ml_detector.load_model()
 
             self.ml_model_loaded = True
 
@@ -99,24 +110,9 @@ class PacketCapture:
     # =========================================================
 
     def process_packet(self, packet):
-
-        try:
-
+        with self._packet_lock:
             self.flow_engine.process_packet(packet)
-
             self.packet_count += 1
-
-            if self.window_manager.is_expired():
-
-                self.process_window()
-
-                self.window_manager.reset()
-
-        except Exception as e:
-
-            print(
-                f"[PACKET ERROR] {e}"
-            )
 
     # =========================================================
     # TEMPORAL STRENGTH
@@ -1132,6 +1128,7 @@ class PacketCapture:
 
                 try:
 
+                    feature["ml_available"] = int(self.ml_model_loaded)
                     self.database.insert_flow(
 
                         feature,
@@ -1262,77 +1259,47 @@ class PacketCapture:
     # =========================================================
 
     def start(self):
-
-        print()
-        print("=" * 70)
-
-        print(
-            "AegisNet Network Traffic "
-            "Monitoring Started"
-        )
-
-        print(
-            "Defense Mode: SIMULATION"
-        )
-
-        print(
-            f"Capture Interface: "
-            f"{self.interface.name}"
-        )
-
-        print(
-            f"Window Size: "
-            f"{WINDOW_SECONDS} seconds"
-        )
-
-        print("=" * 70)
-
-        print(
-            "Generate normal traffic "
-            "on this machine to test."
-        )
-
-        print(
-            "Press CTRL+C to stop."
-        )
-
-        print()
-
+        print(f"[CAPTURE] {self.interface.name} | {WINDOW_SECONDS}s windows | SIMULATION response")
+        print("[CAPTURE] Press Ctrl+C to stop and save the last window.")
+        sniffer = AsyncSniffer(iface=self.interface, prn=self.process_packet, store=False)
+        failure = None
         try:
-
-            sniff(
-
-                iface=self.interface,
-
-                prn=self.process_packet,
-
-                store=False
-
-            )
-
+            sniffer.start()
+            time.sleep(0.25)
+            while not STOP_FILE.exists():
+                if not sniffer.running:
+                    raise RuntimeError(str(getattr(sniffer, "exception", None) or "Capture stopped unexpectedly. Check adapter permissions / Npcap."))
+                write_status(state="running", interface=self.interface.name,
+                             ml_loaded=self.ml_model_loaded, packets=self.packet_count)
+                if self.window_manager.is_expired():
+                    with self._packet_lock:
+                        self.process_window()
+                        self.window_manager.reset()
+                time.sleep(0.5)
         except KeyboardInterrupt:
-
-            print()
-            print(
-                "[CAPTURE] Stopped by user."
-            )
-
-        except Exception as e:
-
-            print(
-                f"[CAPTURE ERROR] {e}"
-            )
-
+            print("[CAPTURE] Stopped by user.")
+        except Exception as exc:
+            failure = str(exc)
+            print(f"[CAPTURE ERROR] {exc}")
             traceback.print_exc()
+        finally:
+            if sniffer.running:
+                try:
+                    sniffer.stop()
+                except Exception:
+                    pass
+            with self._packet_lock:
+                if self.flow_engine.get_all_features():
+                    self.process_window()
+            self.database.connection.close()
+            write_status(state="error" if failure else "stopped", interface=self.interface.name,
+                         ml_loaded=self.ml_model_loaded, packets=self.packet_count, message=failure)
+            STOP_FILE.unlink(missing_ok=True)
 
 
 def main():
-
-    capture = PacketCapture()
-
-    capture.start()
+    PacketCapture().start()
 
 
 if __name__ == "__main__":
-
     main()

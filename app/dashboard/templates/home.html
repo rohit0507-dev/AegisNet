@@ -1,0 +1,367 @@
+<section
+  class="page home-page"
+  id="page-home"
+  aria-label="Project introduction"
+  tabindex="-1"
+>
+  <div class="hero-meta">
+    <span>COMPUTER NETWORKS / PROJECT 2026</span
+    ><span>PACKETS. PROTOCOLS. PATTERNS.</span>
+  </div>
+  <div class="hero">
+    <div class="hero-copy">
+      <span class="eyebrow"><span class="square-mark"></span> AEGISNET</span>
+      <h1>A closer look<br />at your<br /><em>network.</em></h1>
+      <p>
+        Capture packets. Follow the conversations. Understand what unusual
+        traffic looks like.
+      </p>
+      <div class="hero-actions">
+        <a class="button primary hero-button" href="#overview"
+          >Open network monitor <span data-icon="arrow"></span
+        ></a>
+        <button class="text-button" data-scroll="about-project">
+          How it works <span aria-hidden="true">↓</span>
+        </button>
+      </div>
+      <p class="hero-footnote">
+        Real-time network monitoring &amp; intrusion detection.<br />Built
+        around the fundamentals of Computer Networks.
+      </p>
+    </div>
+    <div class="packet-illustration">
+      <div class="diagram-heading">
+        <span>FIG. 01 / A PACKET IN TRANSIT</span
+        ><span class="diagram-label">ILLUSTRATION</span>
+      </div>
+      <svg
+        class="network-drawing"
+        viewBox="0 0 560 390"
+        role="img"
+        aria-labelledby="network-title network-description"
+      >
+        <title id="network-title">
+          Example path from a client through a switch and router to a server
+        </title>
+        <desc id="network-description">
+          Select a device below to explore its role. This diagram is an
+          educational illustration, not a discovery of your network.
+        </desc>
+        <defs>
+          <pattern
+            id="diagram-dots"
+            width="24"
+            height="24"
+            patternUnits="userSpaceOnUse"
+          >
+            <circle cx="1" cy="1" r="1" fill="#586053" />
+          </pattern>
+        </defs>
+        <rect
+          x="0"
+          y="0"
+          width="560"
+          height="390"
+          fill="url(#diagram-dots)"
+          opacity=".48"
+        />
+        <path
+          class="network-wire"
+          d="M96 96H194V216H254M314 216H400V112H455M286 245V320H426M96 123V319H171"
+        />
+        <path
+          class="network-wire branch"
+          d="M222 216H145V252M400 165H485V260"
+        />
+        <path id="packet-trail" d="M96 96H194V216H286H400V112H468" />
+        <g
+          class="device-node is-selected"
+          data-device="0"
+          transform="translate(56 57)"
+        >
+          <rect class="device-shell" width="80" height="66" rx="3" />
+          <rect
+            class="device-screen"
+            x="10"
+            y="10"
+            width="60"
+            height="37"
+            rx="1"
+          />
+          <path d="M31 66v13m18-13v13M23 79h34" />
+          <text class="device-number" x="-5" y="-16">01</text>
+          <text class="device-label" x="40" y="106" text-anchor="middle">
+            CLIENT
+          </text>
+        </g>
+        <g class="device-node" data-device="1" transform="translate(163 192)">
+          <rect class="device-shell" width="60" height="48" rx="3" />
+          <path d="M12 17h36M12 30h5m7 0h5m7 0h5m7 0h1" />
+          <text class="device-number" x="2" y="-13">02</text>
+          <text class="device-label" x="30" y="72" text-anchor="middle">
+            SWITCH
+          </text>
+        </g>
+        <g class="device-node" data-device="2" transform="translate(254 183)">
+          <circle class="device-shell" cx="32" cy="33" r="32" />
+          <path d="M14 27h32m-6-6 6 6-6 6M49 41H17m6-6-6 6 6 6" />
+          <text class="device-number" x="19" y="-15">03</text>
+          <text class="device-label" x="32" y="84" text-anchor="middle">
+            ROUTER
+          </text>
+        </g>
+        <g class="device-node" data-device="3" transform="translate(437 58)">
+          <rect class="device-shell" width="62" height="106" rx="3" />
+          <path d="M0 35h62M0 71h62M12 18h25M12 53h25M12 88h25" />
+          <circle cx="49" cy="18" r="2" />
+          <circle cx="49" cy="53" r="2" />
+          <circle cx="49" cy="88" r="2" />
+          <text class="device-number" x="18" y="-17">04</text>
+          <text class="device-label" x="31" y="132" text-anchor="middle">
+            SERVER
+          </text>
+        </g>
+        <g class="secondary-device" transform="translate(420 302)">
+          <rect width="38" height="30" rx="2" />
+          <path d="M14 30v9h-8m8 0h17" />
+        </g>
+        <g class="secondary-device" transform="translate(135 252)">
+          <rect width="21" height="35" rx="2" />
+          <path d="M8 29h5" />
+        </g>
+        <g class="secondary-device" transform="translate(472 260)">
+          <rect width="28" height="42" rx="2" />
+          <path d="M7 10h14M7 21h14M7 32h5" />
+        </g>
+        <text class="wire-label" x="204" y="153">LAN</text>
+        <text class="wire-label" x="409" y="210">NEXT HOP</text>
+        <text class="wire-label" x="85" y="365">SOURCE → DESTINATION</text>
+        <circle id="example-packet" cx="96" cy="96" r="6" />
+      </svg>
+      <div class="hop-selector" aria-label="Explore the illustrated devices">
+        <button data-hop="0" aria-pressed="true"><span>01</span> Client</button>
+        <button data-hop="1" aria-pressed="false">
+          <span>02</span> Switch
+        </button>
+        <button data-hop="2" aria-pressed="false">
+          <span>03</span> Router
+        </button>
+        <button data-hop="3" aria-pressed="false">
+          <span>04</span> Server
+        </button>
+      </div>
+      <div class="diagram-caption" aria-live="polite" aria-atomic="true">
+        <strong id="hop-title">The conversation starts here.</strong>
+        <p id="hop-copy">
+          An application creates data. TCP adds ports; IP adds the source and
+          destination addresses.
+        </p>
+      </div>
+      <div class="diagram-actions">
+        <span>Example only · no packets transmitted</span
+        ><button id="replay-packet">
+          Follow the packet <span data-icon="arrow"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="protocol-ribbon" aria-label="Protocols in the project">
+    <span>ON THE WIRE</span><span>TCP</span><span>UDP</span
+    ><span>IPv4 / IPv6</span><span>ICMP</span><span>ARP</span><span>DNS</span>
+  </div>
+
+  <section
+    class="editorial-section project-intro"
+    id="about-project"
+    tabindex="-1"
+  >
+    <div class="section-index">
+      <span>01 / THE PROJECT</span><span aria-hidden="true">↘</span>
+    </div>
+    <div class="intro-copy">
+      <h2>Networking concepts.<br /><span>Visible in real traffic.</span></h2>
+      <p>
+        AegisNet is our Computer Networks project: a local application for
+        seeing how devices communicate and investigating traffic that needs a
+        closer look.
+      </p>
+      <p>
+        The monitor groups captured packets into flows, checks rules and
+        machine-learning outliers, and stores the results for review. The
+        accompanying CN tools connect those observations to the concepts we
+        study.
+      </p>
+      <a href="#project" class="inline-link"
+        >Read the scope &amp; limitations <span data-icon="arrow"></span
+      ></a>
+    </div>
+  </section>
+
+  <section class="workspace-section" aria-labelledby="workspace-title">
+    <div class="section-heading">
+      <span class="section-index">02 / THE WORKSPACE</span>
+      <h2 id="workspace-title">Start with a question.</h2>
+    </div>
+    <a class="workspace-row" href="#overview"
+      ><span class="row-number">01</span>
+      <h3>What is happening on the network?</h3>
+      <span>Traffic rates &amp; protocol distribution</span
+      ><span class="round-arrow" data-icon="arrow"></span
+    ></a>
+    <a class="workspace-row" href="#traffic"
+      ><span class="row-number">02</span>
+      <h3>Who is talking to whom?</h3>
+      <span>Flow records, addresses &amp; TCP flags</span
+      ><span class="round-arrow" data-icon="arrow"></span
+    ></a>
+    <a class="workspace-row" href="#detections"
+      ><span class="row-number">03</span>
+      <h3>Which traffic needs a closer look?</h3>
+      <span>Rule alerts &amp; ML anomalies</span
+      ><span class="round-arrow" data-icon="arrow"></span
+    ></a>
+    <a class="workspace-row" href="#lab"
+      ><span class="row-number">04</span>
+      <h3>How do the fundamentals work?</h3>
+      <span>Subnetting, error control &amp; OSI layers</span
+      ><span class="round-arrow" data-icon="arrow"></span
+    ></a>
+  </section>
+
+  <section class="pipeline-section" aria-labelledby="pipeline-title">
+    <div class="pipeline-top">
+      <span class="section-index">03 / UNDER THE HOOD</span>
+      <h2 id="pipeline-title">
+        From a packet<br />to something you can inspect.
+      </h2>
+    </div>
+    <ol class="pipeline-list">
+      <li>
+        <span>01 / CAPTURE</span>
+        <h3>Read the interface.</h3>
+        <p>Scapy receives packets from the selected network adapter.</p>
+        <code>Ethernet · IP · TCP / UDP</code>
+      </li>
+      <li>
+        <span>02 / AGGREGATE</span>
+        <h3>Connect the records.</h3>
+        <p>Directional five-tuples group packets within a processing window.</p>
+        <code>src → dst · ports · protocol</code>
+      </li>
+      <li>
+        <span>03 / ANALYSE</span>
+        <h3>Look for patterns.</h3>
+        <p>
+          Traffic rules and Isolation Forest flag unusual behaviour for review.
+        </p>
+        <code>rules + anomaly detection</code>
+      </li>
+      <li>
+        <span>04 / REVIEW</span>
+        <h3>Inspect the evidence.</h3>
+        <p>
+          SQLite stores the results. The dashboard provides filtering and
+          export.
+        </p>
+        <code>flow details · CSV · JSON</code>
+      </li>
+    </ol>
+    <p class="pipeline-note">
+      A flag is a starting point for investigation. Response actions in this
+      project are simulated.
+    </p>
+  </section>
+
+  <section
+    class="editorial-section team-section"
+    id="project-team"
+    tabindex="-1"
+  >
+    <div>
+      <span class="section-index">04 / THE TEAM</span>
+      <h2>Three students.<br />One network project.</h2>
+    </div>
+    <div class="team-roster">
+      <div>
+        <span class="team-initial">BR</span>
+        <div>
+          <h3>Bhumireddi Rohit</h3>
+          <p>24BDS0387</p>
+        </div>
+      </div>
+      <div>
+        <span class="team-initial">PB</span>
+        <div>
+          <h3>Parth Batra</h3>
+          <p>24BDS0416</p>
+        </div>
+      </div>
+      <div>
+        <span class="team-initial">SD</span>
+        <div>
+          <h3>Somya Raj Singh Dalawat</h3>
+          <p>24BCE3001</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="editorial-section faq-section" aria-labelledby="faq-title">
+    <div>
+      <span class="section-index">05 / BEFORE YOU START</span>
+      <h2 id="faq-title">A few useful<br />details.</h2>
+    </div>
+    <div class="faq-list">
+      <details>
+        <summary>Is the dashboard showing live traffic?</summary>
+        <p>
+          It shows saved records until you start capture. Open the monitor,
+          choose Capture controls, select your adapter, and start capture. The
+          status label distinguishes live capture from saved data.
+        </p>
+      </details>
+      <details>
+        <summary>What is needed for capture on Windows?</summary>
+        <p>
+          Install the Python requirements and Npcap. If your Npcap installation
+          restricts access, run the dashboard terminal as Administrator. The
+          included saved records and CN tools work without starting capture.
+        </p>
+      </details>
+      <details>
+        <summary>Does an alert mean an attack happened?</summary>
+        <p>
+          No. A rule match or ML anomaly identifies a pattern that needs review.
+          Inspect the flow fields and context. The included ML dataset is a
+          small academic baseline, and this project does not automatically block
+          traffic.
+        </p>
+      </details>
+      <details>
+        <summary>Which networking concepts can we demonstrate?</summary>
+        <p>
+          Packet protocols, IP addresses, ports, directional flows, TCP flags,
+          and captured traffic rates. CN tools also includes IPv4 subnetting,
+          CRC, Internet checksum, Hamming code, and an OSI layer explorer.
+        </p>
+      </details>
+    </div>
+  </section>
+  <footer class="project-footer">
+    <div>
+      <span class="section-index">READY TO LOOK CLOSER?</span
+      ><a href="#overview">Open the monitor <span data-icon="arrow"></span></a>
+    </div>
+    <div class="footer-wordmark" aria-hidden="true">AegisNet<span>↗</span></div>
+    <div class="footer-baseline">
+      <span
+        >Real-Time Network Traffic Monitoring and Intrusion Detection
+        System</span
+      ><a href="#project">Project details</a><a href="#lab">CN tools</a
+      ><button class="text-button" data-scroll="page-home">
+        Back to top ↑
+      </button>
+    </div>
+  </footer>
+</section>

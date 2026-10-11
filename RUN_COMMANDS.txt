@@ -1,0 +1,39 @@
+AegisNet — Windows quick start
+
+1. Extract the ZIP.
+2. Open the INNER AegisNet folder containing requirements.txt in VS Code.
+   If you opened the outer extracted folder instead, run: cd .\AegisNet
+3. Open a PowerShell terminal in that folder. Use Python 3.12 (64-bit).
+4. Run ONE COMMAND AT A TIME. Let pip finish before training or launching.
+   Do not press Ctrl+C during installation.
+
+   If an old dashboard is running, stop its terminal with Ctrl+C first.
+
+   Run:
+
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe main.py --train-model
+.\.venv\Scripts\python.exe run_dashboard.py
+
+5. Open http://127.0.0.1:5000 in your browser.
+   The new introduction opens first. Click Open network monitor.
+   Press Ctrl+F5 if the browser still shows the older design.
+
+On later runs, only the last command is needed. Keep its terminal open.
+Press Ctrl+C in the terminal to stop the server.
+
+For live capture, install Npcap first. Then open Capture controls, select
+Wi-Fi or Ethernet, and click Start capture. Use an Administrator terminal
+if your Npcap installation restricts adapter access to administrators.
+Saved traffic and the CN tools work without starting capture.
+
+Alternative: double-click INSTALL_WINDOWS.bat once, then START_WINDOWS.bat.
+
+If port 5000 is already used:
+.\.venv\Scripts\python.exe run_dashboard.py --port 5001
+Then open http://127.0.0.1:5001.
+
+Source walkthrough: docs/CODE_GUIDE.md
+Demonstration guide: docs/PROJECT_GUIDE.md
+Detailed setup and measurement definitions: README.md

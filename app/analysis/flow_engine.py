@@ -1,6 +1,7 @@
 from collections import defaultdict
 from datetime import datetime
-from scapy.all import IP, IPv6, TCP, UDP
+from scapy.all import IP, IPv6, TCP, UDP, ICMP, ARP, DNS
+from scapy.layers.inet6 import _ICMPv6
 
 
 class Flow:
@@ -22,6 +23,8 @@ class Flow:
 
         self.protocol = protocol
 
+        self.application_protocol = None
+        self.ip_version = None
         self.packet_count = 0
         self.total_bytes = 0
 
@@ -35,7 +38,13 @@ class Flow:
 
     def add_packet(self, packet):
 
-        current_time = datetime.now()
+        current_time = datetime.fromtimestamp(float(packet.time))
+        self.ip_version = 4 if IP in packet else (6 if IPv6 in packet else None)
+        if DNS in packet:
+            self.application_protocol = "DNS"
+        elif self.application_protocol is None:
+            self.application_protocol = self.protocol
+
 
         if self.start_time is None:
             self.start_time = current_time
@@ -132,6 +141,9 @@ class Flow:
 
         return {
 
+            "application_protocol": self.application_protocol,
+            "ip_version": self.ip_version,
+
             "source_ip":
                 self.source_ip,
 
@@ -209,6 +221,10 @@ class FlowEngine:
             source_ip = packet[IPv6].src
             destination_ip = packet[IPv6].dst
 
+        elif ARP in packet:
+
+            return (packet[ARP].psrc, packet[ARP].pdst, 0, 0, "ARP")
+
         else:
 
             return None
@@ -229,7 +245,7 @@ class FlowEngine:
 
             source_port = 0
             destination_port = 0
-            protocol = "OTHER"
+            protocol = "ICMP" if ICMP in packet else ("ICMPv6" if any(issubclass(layer, _ICMPv6) for layer in packet.layers()) else "OTHER")
 
         return (
             source_ip,

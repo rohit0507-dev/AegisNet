@@ -1,26 +1,29 @@
 import sqlite3
 from pathlib import Path
 from datetime import datetime
+import os
 
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 
 DATABASE_DIR = BASE_DIR / "data"
 
-DATABASE_FILE = DATABASE_DIR / "aegisnet.db"
+DATABASE_FILE = Path(os.environ.get("AEGISNET_DB", str(DATABASE_DIR / "aegisnet.db"))).resolve()
 
 
 class Database:
 
-    def __init__(self):
+    def __init__(self, path=None):
 
-        DATABASE_DIR.mkdir(
+        self.path = Path(path or DATABASE_FILE)
+
+        self.path.parent.mkdir(
             parents=True,
             exist_ok=True
         )
 
         self.connection = sqlite3.connect(
-            DATABASE_FILE,
+            self.path,
             timeout=30,
             check_same_thread=False
         )
@@ -167,6 +170,9 @@ class Database:
         }
 
         new_columns = {
+            "application_protocol": "TEXT",
+            "ip_version": "INTEGER",
+            "ml_available": "INTEGER",
 
             "syn_ratio": "REAL",
             "ack_ratio": "REAL",
@@ -611,123 +617,15 @@ class Database:
 
         cursor = self.connection.cursor()
 
-        cursor.execute("""
-            INSERT INTO flow_records (
-
-                timestamp,
-
-                source_ip,
-                destination_ip,
-
-                source_port,
-                destination_port,
-
-                protocol,
-
-                packet_count,
-                total_bytes,
-
-                duration,
-
-                packets_per_second,
-                bytes_per_second,
-
-                average_packet_size,
-
-                syn_count,
-                ack_count,
-                fin_count,
-                rst_count,
-
-                syn_ratio,
-                ack_ratio,
-                fin_ratio,
-                rst_ratio,
-
-                window_id,
-
-                threat_score,
-                threat_severity,
-
-                alert_count,
-                alert_types,
-
-                ml_anomaly,
-                ml_anomaly_score,
-
-                temporal_state,
-                temporal_streak,
-                temporal_persistence_ratio,
-                temporal_confidence,
-                temporal_persistent,
-                very_strong_persistent,
-
-                response_state,
-                response_action,
-                response_mode,
-
-                response_effectiveness,
-                response_recommendation
-            )
-
-            VALUES (
-
-                :timestamp,
-
-                :source_ip,
-                :destination_ip,
-
-                :source_port,
-                :destination_port,
-
-                :protocol,
-
-                :packet_count,
-                :total_bytes,
-
-                :duration,
-
-                :packets_per_second,
-                :bytes_per_second,
-
-                :average_packet_size,
-
-                :syn_count,
-                :ack_count,
-                :fin_count,
-                :rst_count,
-
-                :syn_ratio,
-                :ack_ratio,
-                :fin_ratio,
-                :rst_ratio,
-
-                :window_id,
-
-                :threat_score,
-                :threat_severity,
-
-                :alert_count,
-                :alert_types,
-
-                :ml_anomaly,
-                :ml_anomaly_score,
-
-                :temporal_state,
-                :temporal_streak,
-                :temporal_persistence_ratio,
-                :temporal_confidence,
-                :temporal_persistent,
-                :very_strong_persistent,
-
-                :response_state,
-                :response_action,
-                :response_mode,
-
-                :response_effectiveness,
-                :response_recommendation
-            )
-        """, data)
+        data.update({
+            "application_protocol": features.get("application_protocol"),
+            "ip_version": features.get("ip_version"),
+            "ml_available": features.get("ml_available"),
+        })
+        # Column names are fixed above, never supplied by a browser or packet.
+        columns = ", ".join(data)
+        placeholders = ", ".join(":" + key for key in data)
+        cursor.execute(f"INSERT INTO flow_records ({columns}) VALUES ({placeholders})", data)
 
         self.connection.commit()
 

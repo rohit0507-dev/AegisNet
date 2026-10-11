@@ -115,6 +115,10 @@ class RuleEngine:
                         "ports contacted by the source."
                 })
 
+        if getattr(flow, "protocol", None) in {"ICMP", "ICMPv6"} and flow.packet_count >= 200 and flow.packets_per_second() > 100:
+            alerts.append({"type": "ICMP_FLOOD", "severity": "HIGH",
+                           "message": "Sustained high-rate ICMP flow; investigate possible ping flood."})
+
         return alerts
 
 

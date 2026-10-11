@@ -1,0 +1,874 @@
+/* Project introduction. Shared monitor controls live in app.css. */
+.home-page {
+  gap: 0;
+}
+.is-home main {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.hero-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 0;
+  font:
+    10px/1.5 "IBM Plex Mono",
+    monospace;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+}
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6%;
+  align-items: center;
+  min-height: min(720px, calc(100svh - 160px));
+  padding: 16px 0 42px;
+}
+.hero-copy {
+  padding: 16px 0;
+}
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font:
+    11px/1.5 "IBM Plex Mono",
+    monospace;
+  letter-spacing: 1.4px;
+  margin-bottom: 25px;
+}
+.square-mark {
+  width: 9px;
+  height: 9px;
+  background: var(--accent);
+}
+.hero h1 {
+  font-size: clamp(57px, 6.3vw, 92px);
+  font-weight: 500;
+  line-height: 1.025;
+  letter-spacing: -5px;
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--accent);
+}
+.hero-copy > p:not(.hero-footnote) {
+  font-size: 15px;
+  line-height: 1.85;
+  max-width: 35ch;
+  margin-top: 27px;
+  color: #535b4d;
+}
+.hero-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px 28px;
+  margin-top: 29px;
+}
+.hero-button {
+  min-height: 51px;
+  padding: 14px 20px;
+  font-size: 13px;
+}
+.hero-button .icon {
+  margin-left: 9px;
+}
+.hero-footnote {
+  font-size: 10px;
+  line-height: 1.9;
+  color: var(--muted);
+  margin-top: 26px;
+}
+.packet-illustration {
+  min-width: 0;
+  background: var(--ink);
+  color: #f0f0e5;
+  border: 1px solid var(--ink);
+}
+.diagram-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  padding: 18px 22px 0;
+  font:
+    9px/1.6 "IBM Plex Mono",
+    monospace;
+  color: #c3caba;
+  letter-spacing: 0.5px;
+}
+.diagram-label {
+  color: #dddacf;
+  padding: 3px 6px;
+  border: 1px solid #66705f;
+}
+.network-drawing {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 350px;
+}
+.network-wire {
+  fill: none;
+  stroke: #8c9783;
+  stroke-width: 1.5;
+}
+.network-wire.branch {
+  stroke: #6e7866;
+}
+#packet-trail {
+  fill: none;
+  stroke: var(--accent-light);
+  stroke-width: 2;
+  stroke-dasharray: 4 5;
+}
+.device-node {
+  fill: none;
+  stroke: #c6cebb;
+  stroke-width: 1.6;
+}
+.device-shell {
+  fill: var(--ink);
+}
+.device-screen {
+  fill: #333b2e;
+}
+.device-node.is-selected {
+  stroke: #e7a184;
+}
+.device-node.is-selected .device-shell {
+  fill: #41392e;
+}
+.device-number,
+.device-label,
+.wire-label {
+  font:
+    10px "IBM Plex Mono",
+    monospace;
+  stroke: none;
+  fill: #c6cebb;
+  letter-spacing: 1px;
+}
+.device-number {
+  fill: #aebc9f;
+}
+.device-label {
+  font-size: 10px;
+}
+.wire-label {
+  font-size: 8px;
+  fill: #a3af97;
+  letter-spacing: 0.6px;
+}
+.secondary-device {
+  fill: var(--ink);
+  stroke: #8c9783;
+  stroke-width: 1.4;
+}
+#example-packet {
+  fill: var(--accent-light);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+.hop-selector {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid #535d4c;
+  border-bottom: 1px solid #535d4c;
+}
+.hop-selector button {
+  min-height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  color: #d4dbcc;
+  border: 0;
+  border-right: 1px solid #535d4c;
+  background: none;
+  font-size: 11px;
+}
+.hop-selector button:last-child {
+  border-right: 0;
+}
+.hop-selector span {
+  font:
+    9px "IBM Plex Mono",
+    monospace;
+  color: #a7b29b;
+}
+.hop-selector button[aria-pressed="true"] {
+  color: var(--ink);
+  background: var(--sage);
+}
+.hop-selector button[aria-pressed="true"] span {
+  color: #424f37;
+}
+.hop-selector button:hover {
+  background: #3b4533;
+  color: #fff;
+}
+.packet-illustration :focus-visible {
+  outline-color: var(--accent-light);
+  outline-offset: -4px;
+}
+.diagram-caption {
+  min-height: 112px;
+  padding: 18px 22px 12px;
+}
+.diagram-caption strong {
+  font: 500 16px/1.4 var(--display);
+}
+.diagram-caption p {
+  font-size: 11px;
+  line-height: 1.75;
+  color: #bac5b0;
+  margin-top: 7px;
+  max-width: 53ch;
+}
+.diagram-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px 22px 17px;
+}
+.diagram-actions > span {
+  font:
+    8px/1.5 "IBM Plex Mono",
+    monospace;
+  color: #bdc7b4;
+}
+.diagram-actions button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: none;
+  border: 0;
+  padding: 5px 0;
+  color: #f0beaa;
+  font-size: 10px;
+}
+.diagram-actions .icon {
+  width: 14px;
+  height: 14px;
+}
+.protocol-ribbon {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  font: 500 15px/1.5 var(--display);
+}
+.protocol-ribbon span:first-child {
+  font:
+    9px/1.5 "IBM Plex Mono",
+    monospace;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+.editorial-section {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 12%;
+  padding: 105px 0;
+}
+.section-index {
+  font:
+    10px/1.5 "IBM Plex Mono",
+    monospace;
+  letter-spacing: 0.65px;
+  color: var(--muted);
+}
+.project-intro > .section-index {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: flex-start;
+}
+.project-intro > .section-index span:last-child {
+  font: 400 92px/1 var(--display);
+  color: var(--ink);
+}
+.editorial-section h2,
+.section-heading h2 {
+  font: 500 clamp(30px, 3.3vw, 46px)/1.15 var(--display);
+  letter-spacing: -1.7px;
+}
+.intro-copy h2 span {
+  color: #69735f;
+}
+.intro-copy p {
+  margin-top: 23px;
+  max-width: 65ch;
+  color: #5b6453;
+  font-size: 14px;
+  line-height: 1.9;
+}
+.inline-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--ink);
+  padding: 8px 0;
+  margin-top: 18px;
+  font-size: 12px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.inline-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.workspace-section {
+  padding: 10px 0 105px;
+}
+.section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 35px;
+}
+.workspace-row {
+  display: grid;
+  grid-template-columns: 45px minmax(0, 1.6fr) minmax(0, 1fr) 40px;
+  align-items: center;
+  gap: 20px;
+  border-top: 1px solid var(--line);
+  padding: 26px 0;
+  color: var(--ink);
+  text-decoration: none;
+  transition:
+    padding 0.2s,
+    color 0.2s;
+}
+.workspace-row:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.workspace-row h3 {
+  font-size: 22px;
+  letter-spacing: -0.65px;
+  line-height: 1.35;
+}
+.row-number {
+  font:
+    11px "IBM Plex Mono",
+    monospace;
+  color: var(--muted);
+}
+.workspace-row > span:nth-last-child(2) {
+  font-size: 11px;
+  color: var(--muted);
+}
+.round-arrow {
+  border: 1px solid var(--ink);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+.workspace-row:hover {
+  color: var(--accent);
+  padding-left: 9px;
+}
+.workspace-row:hover .round-arrow {
+  background: var(--ink);
+  color: var(--surface);
+}
+.pipeline-section {
+  padding: 50px 42px 24px;
+  background: #dfe5d7;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.pipeline-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  align-items: flex-start;
+  margin-bottom: 45px;
+}
+.pipeline-top h2 {
+  font-size: 35px;
+  letter-spacing: -1.3px;
+  line-height: 1.15;
+  max-width: 580px;
+}
+.pipeline-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.pipeline-list li {
+  border-top: 1px solid #a8b19e;
+  border-right: 1px solid #a8b19e;
+  padding: 24px 20px 25px;
+}
+.pipeline-list li:first-child {
+  padding-left: 0;
+}
+.pipeline-list li:last-child {
+  border-right: 0;
+  padding-right: 0;
+}
+.pipeline-list li > span {
+  font:
+    9px "IBM Plex Mono",
+    monospace;
+  color: #536348;
+}
+.pipeline-list h3 {
+  font-size: 18px;
+  margin-top: 20px;
+}
+.pipeline-list p {
+  font-size: 11px;
+  color: #536348;
+  margin-top: 10px;
+  line-height: 1.9;
+}
+.pipeline-list code {
+  display: block;
+  font-size: 8px;
+  margin-top: 22px;
+  color: #47563d;
+}
+.pipeline-note {
+  font-size: 10px;
+  color: #526146;
+  border-top: 1px solid #a8b19e;
+  padding-top: 18px;
+}
+.team-section {
+  border-bottom: 1px solid var(--line);
+}
+.team-section h2,
+.faq-section h2 {
+  margin-top: 23px;
+}
+.team-roster > div {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  border-bottom: 1px solid var(--line);
+  padding: 25px 0;
+}
+.team-roster > div:first-child {
+  border-top: 1px solid var(--line);
+}
+.team-initial {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  background: #e9e4d9;
+  font: 500 14px var(--display);
+  flex-shrink: 0;
+}
+.team-roster h3 {
+  font-size: 20px;
+  letter-spacing: -0.4px;
+  line-height: 1.4;
+}
+.team-roster p {
+  font:
+    10px/1.5 "IBM Plex Mono",
+    monospace;
+  margin-top: 7px;
+  color: var(--muted);
+}
+.faq-list details {
+  border-bottom: 1px solid var(--line);
+  padding: 20px 0;
+}
+.faq-list details:first-child {
+  border-top: 1px solid var(--line);
+}
+.faq-list summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  font: 500 17px/1.5 var(--display);
+  list-style: none;
+}
+.faq-list summary::-webkit-details-marker {
+  display: none;
+}
+.faq-list summary::after {
+  content: "+";
+  font: 400 24px/1 var(--display);
+  color: var(--accent);
+}
+.faq-list details[open] summary::after {
+  content: "−";
+}
+.faq-list p {
+  margin-top: 15px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.9;
+  padding-right: 25px;
+}
+.project-footer {
+  border-top: 1px solid var(--ink);
+  padding: 36px 0 24px;
+}
+.project-footer > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+.project-footer > div:first-child a {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  font: 500 25px var(--display);
+  color: var(--ink);
+  text-decoration: none;
+}
+.project-footer > div:first-child a:hover {
+  color: var(--accent);
+}
+.footer-wordmark {
+  display: flex;
+  justify-content: space-between;
+  font: 500 clamp(70px, 13.5vw, 190px)/1.2 var(--display);
+  letter-spacing: -8px;
+  margin: 18px 0 25px;
+}
+.footer-wordmark > span {
+  color: var(--accent);
+}
+.footer-baseline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  font-size: 10px;
+  color: var(--muted);
+}
+.footer-baseline a {
+  color: var(--ink);
+  text-decoration: none;
+}
+.footer-baseline a:hover {
+  text-decoration: underline;
+}
+.footer-baseline .text-button {
+  font-size: 10px;
+  border: 0;
+  padding: 0;
+}
+.section-entered {
+  animation: section-arrive 0.45s ease-out both;
+}
+@keyframes section-arrive {
+  from {
+    transform: translateY(9px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@media (min-width: 961px) and (max-height: 780px) {
+  .hero {
+    min-height: 590px;
+    padding-top: 0;
+  }
+  .hero h1 {
+    font-size: clamp(58px, 5.9vw, 82px);
+  }
+  .network-drawing {
+    max-height: 280px;
+  }
+  .eyebrow {
+    margin-bottom: 18px;
+  }
+}
+@media (max-width: 1100px) {
+  .hero {
+    gap: 5%;
+  }
+  .hero h1 {
+    letter-spacing: -3.5px;
+  }
+  .diagram-heading {
+    font-size: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .diagram-caption {
+    padding-left: 16px;
+    padding-right: 16px;
+    min-height: 128px;
+  }
+  .diagram-actions {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .hero-actions {
+    gap: 15px;
+  }
+  .hero-button {
+    padding: 13px 15px;
+  }
+  .editorial-section {
+    gap: 7%;
+  }
+  .pipeline-section {
+    padding-left: 27px;
+    padding-right: 27px;
+  }
+  .workspace-row h3 {
+    font-size: 19px;
+  }
+}
+@media (max-width: 800px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 26px;
+    padding-top: 0;
+    padding-bottom: 35px;
+  }
+  .hero-copy {
+    padding-top: 17px;
+  }
+  .hero h1 {
+    font-size: clamp(62px, 10vw, 84px);
+    letter-spacing: -4px;
+  }
+  .hero h1 br:nth-of-type(2) {
+    display: none;
+  }
+  .hero h1 em::before {
+    content: " ";
+  }
+  .hero-copy > p:not(.hero-footnote) {
+    max-width: 42ch;
+  }
+  .hero-footnote {
+    margin-top: 18px;
+  }
+  .packet-illustration {
+    max-width: 620px;
+    width: 100%;
+  }
+  .network-drawing {
+    max-height: 380px;
+  }
+  .diagram-caption {
+    min-height: 101px;
+  }
+  .hero-meta {
+    padding: 18px 0;
+    font-size: 8px;
+  }
+  .hero-meta span:last-child {
+    display: none;
+  }
+  .protocol-ribbon {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 14px 23px;
+    font-size: 13px;
+  }
+  .protocol-ribbon span:first-child {
+    flex-basis: 100%;
+  }
+  .editorial-section {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 65px 0;
+  }
+  .project-intro > .section-index {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .project-intro > .section-index span:last-child {
+    font-size: 38px;
+  }
+  .editorial-section h2,
+  .section-heading h2 {
+    font-size: 36px;
+    letter-spacing: -1.4px;
+  }
+  .workspace-section {
+    padding-bottom: 65px;
+  }
+  .section-heading {
+    display: block;
+    margin-bottom: 26px;
+  }
+  .section-heading h2 {
+    margin-top: 20px;
+  }
+  .workspace-row {
+    grid-template-columns: 25px minmax(0, 1fr) 35px;
+    gap: 12px;
+    padding: 22px 0;
+  }
+  .workspace-row > span:nth-last-child(2) {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .workspace-row .round-arrow {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    width: 34px;
+    height: 34px;
+  }
+  .workspace-row h3 {
+    font-size: 21px;
+  }
+  .pipeline-section {
+    padding: 31px 23px 23px;
+  }
+  .pipeline-top {
+    display: block;
+    margin-bottom: 27px;
+  }
+  .pipeline-top h2 {
+    margin-top: 22px;
+    font-size: 31px;
+  }
+  .pipeline-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .pipeline-list li:nth-child(2) {
+    border-right: 0;
+    padding-right: 0;
+  }
+  .pipeline-list li:nth-child(3) {
+    padding-left: 0;
+  }
+  .pipeline-list p {
+    font-size: 12px;
+  }
+  .pipeline-list code {
+    overflow-wrap: anywhere;
+  }
+  .team-section h2,
+  .faq-section h2 {
+    margin-top: 20px;
+  }
+  .team-roster h3 {
+    font-size: 22px;
+  }
+  .footer-wordmark {
+    letter-spacing: -4px;
+    font-size: 15vw;
+  }
+  .footer-baseline > span {
+    flex-basis: 100%;
+  }
+}
+@media (max-width: 420px) {
+  .hero h1 {
+    font-size: 58px;
+    letter-spacing: -3.2px;
+  }
+  .hero h1 br:nth-of-type(2) {
+    display: inline;
+  }
+  .hero h1 em::before {
+    content: none;
+  }
+  .eyebrow {
+    font-size: 10px;
+    margin-bottom: 21px;
+  }
+  .hero-copy > p:not(.hero-footnote) {
+    font-size: 13px;
+  }
+  .hero-actions {
+    gap: 14px 23px;
+  }
+  .hero-button {
+    min-height: 48px;
+    font-size: 12px;
+  }
+  .diagram-heading {
+    font-size: 7px;
+  }
+  .diagram-caption strong {
+    font-size: 15px;
+  }
+  .hop-selector button {
+    gap: 5px;
+    font-size: 10px;
+  }
+  .diagram-actions > span {
+    font-size: 7px;
+  }
+  .diagram-actions button {
+    font-size: 9px;
+  }
+  .intro-copy p {
+    font-size: 13px;
+  }
+  .editorial-section h2,
+  .section-heading h2 {
+    font-size: 32px;
+  }
+  .pipeline-section {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+  .pipeline-top h2 {
+    font-size: 28px;
+  }
+  .pipeline-list h3 {
+    font-size: 17px;
+  }
+  .pipeline-list li {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .pipeline-list p {
+    font-size: 11px;
+  }
+  .team-roster {
+    min-width: 0;
+  }
+  .team-roster > div {
+    gap: 16px;
+  }
+  .team-roster h3 {
+    font-size: 19px;
+  }
+  .faq-list summary {
+    font-size: 16px;
+  }
+  .project-footer > div:first-child {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 17px;
+  }
+  .footer-wordmark {
+    margin-top: 25px;
+    letter-spacing: -3px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .section-entered {
+    animation: none;
+  }
+  .workspace-row {
+    transition: none;
+  }
+}

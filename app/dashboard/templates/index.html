@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f3ec" />
+    <title>AegisNet | Network Monitor</title>
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='favicon.svg') }}"
+      type="image/svg+xml"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='presentation.css') }}"
+    />
+    <script
+      src="{{ url_for('static', filename='network_tools.js') }}"
+      defer
+    ></script>
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+    <script
+      src="{{ url_for('static', filename='presentation.js') }}"
+      defer
+    ></script>
+  </head>
+  <body class="is-home">
+    <a class="skip" href="#main">Skip to content</a>
+    <noscript
+      ><div class="noscript-note">
+        Enable JavaScript to open the monitor and use the interactive tools.
+      </div></noscript
+    >
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="AegisNet project home"
+        ><svg class="brand-symbol" viewBox="0 0 36 36" aria-hidden="true">
+          <path d="M6 27 17 7h3l10 20M11 20h14M4 30h28" />
+          <circle cx="18" cy="7" r="3" />
+          <circle cx="6" cy="27" r="3" />
+          <circle cx="30" cy="27" r="3" /></svg
+        ><span>AegisNet<span class="brand-period">.</span></span></a
+      >
+      <nav class="site-links" aria-label="Project links">
+        <button data-scroll="about-project">The project</button
+        ><a href="#overview">Network monitor</a
+        ><button data-scroll="project-team">Our team</button>
+      </nav>
+      <div class="header-actions">
+        <a class="button header-cta" href="#overview"
+          >Open monitor <span data-icon="arrow"></span></a
+        ><button
+          class="icon-button menu-button"
+          id="menu-button"
+          data-icon="menu"
+          aria-label="Open navigation"
+          aria-controls="sidebar"
+          aria-expanded="false"
+        ></button>
+      </div>
+    </header>
+    <aside class="workspace-nav" id="sidebar" aria-label="Workspace navigation">
+      <div class="drawer-heading">
+        <strong>Workspace</strong
+        ><button
+          class="icon-button"
+          id="close-navigation"
+          data-icon="close"
+          aria-label="Close navigation"
+        ></button>
+      </div>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="#home" class="nav-link active" data-page="home"
+          >Project home</a
+        >
+        <a href="#overview" class="nav-link" data-page="overview">Dashboard</a>
+        <a href="#traffic" class="nav-link" data-page="traffic"
+          >Traffic records</a
+        >
+        <a href="#detections" class="nav-link" data-page="detections"
+          >Alerts <span class="nav-count" id="alert-count">—</span></a
+        >
+        <a href="#responses" class="nav-link" data-page="responses"
+          >Response history</a
+        >
+        <a href="#lab" class="nav-link" data-page="lab">CN tools</a>
+        <a href="#project" class="nav-link" data-page="project"
+          >Project details</a
+        >
+      </nav>
+      <div class="capture-state">
+        <span class="status-dot" id="sensor-dot"></span
+        ><strong id="sensor-name">Capture stopped</strong>
+      </div>
+    </aside>
+    <button
+      class="nav-overlay"
+      id="nav-overlay"
+      aria-label="Close navigation"
+      tabindex="-1"
+      hidden
+    ></button>
+    <div class="workspace">
+      <div class="workspace-topbar">
+        <div class="breadcrumb">
+          <a href="#home">AegisNet</a><span aria-hidden="true">/</span
+          ><strong id="breadcrumb">Dashboard</strong>
+        </div>
+        <span class="course-label"
+          >COMPUTER NETWORKS / MONITORING WORKSPACE</span
+        >
+      </div>
+      <main id="main" tabindex="-1">
+        <div class="page-heading">
+          <div>
+            <h1 id="page-title">Dashboard</h1>
+            <p id="page-description">
+              Packet counts, protocol distribution, and recent flow records.
+            </p>
+          </div>
+          <div class="page-actions">
+            <button class="button" id="export-report">Export report</button
+            ><button class="button primary" data-open-capture>
+              Capture controls
+            </button>
+          </div>
+        </div>
+        <div class="error-banner" id="error-banner" role="alert" hidden></div>
+        <div class="capture-banner" id="capture-banner">
+          <strong id="mode-tag">Saved data</strong
+          ><span id="capture-message">Loading stored traffic…</span>
+        </div>
+        <div class="context-bar" id="context-bar">
+          <div class="context-status">
+            <span class="status-dot" id="data-dot"></span
+            ><strong id="data-status">Saved traffic</strong
+            ><span id="data-date">—</span>
+          </div>
+          <div class="context-controls">
+            <label for="range-select">Show</label
+            ><select id="range-select">
+              <option value="5m">Latest 5 minutes</option>
+              <option value="15m">Latest 15 minutes</option>
+              <option value="1h">Latest 1 hour</option>
+              <option value="24h">Latest 24 hours</option>
+              <option value="all">All saved records</option></select
+            ><button class="button" id="refresh-button">Refresh</button
+            ><button
+              class="button"
+              id="pause-button"
+              title="Pause dashboard updates; packet capture continues"
+            >
+              <span data-icon="pause"></span
+              ><span id="pause-label">Pause updates</span>
+            </button>
+          </div>
+        </div>
+
+        {% include "home.html" %}
+        <section class="page" id="page-overview" aria-label="Dashboard" hidden>
+          <div class="metric-grid">
+            <article class="metric">
+              <h2>Packets captured</h2>
+              <div class="metric-value" id="m-packets">—</div>
+              <p id="m-packets-sub">In the selected range</p>
+            </article>
+            <article class="metric">
+              <h2>Total traffic</h2>
+              <div class="metric-value" id="m-bytes">—</div>
+              <p id="m-bytes-sub">Sum of captured frame sizes</p>
+            </article>
+            <article class="metric">
+              <h2>Unique addresses</h2>
+              <div class="metric-value" id="m-endpoints">—</div>
+              <p>Source and destination addresses</p>
+            </article>
+            <article class="metric">
+              <h2>Flagged flows</h2>
+              <div class="metric-value" id="m-flagged">—</div>
+              <p id="m-flagged-sub">Rule alerts or ML anomalies</p>
+            </article>
+          </div>
+          <div class="overview-charts">
+            <article class="panel">
+              <div class="panel-heading">
+                <div>
+                  <h2>Traffic over time</h2>
+                  <p>Estimated rate from saved flow records</p>
+                </div>
+                <div class="segmented" aria-label="Chart metric">
+                  <button class="active" data-chart="bps">Bit rate</button
+                  ><button data-chart="pps">Packets/s</button>
+                </div>
+              </div>
+              <div class="chart-summary">
+                <strong id="average-rate">—</strong><span>average</span
+                ><span id="chart-series-label">Captured bit rate</span
+                ><span id="bucket-label"></span>
+              </div>
+              <div
+                id="traffic-chart"
+                class="line-chart"
+                role="img"
+                aria-label="Traffic rate chart"
+              ></div>
+            </article>
+            <article class="panel">
+              <div class="panel-heading">
+                <div>
+                  <h2>Protocol distribution</h2>
+                  <p>Packet counts by protocol</p>
+                </div>
+              </div>
+              <div id="protocol-list" class="protocol-list"></div>
+              <div class="panel-note">
+                Percentages use packet counts, not flow counts.
+              </div>
+            </article>
+          </div>
+          <div class="two-grid">
+            <article class="panel">
+              <div class="panel-heading">
+                <div>
+                  <h2>Top source addresses</h2>
+                  <p>Ranked by captured bytes</p>
+                </div>
+              </div>
+              <div id="talker-list" class="talker-list"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-heading">
+                <div>
+                  <h2>Recent alerts</h2>
+                  <p>Flows with rule or ML flags</p>
+                </div>
+                <a href="#detections" class="panel-link">View alerts</a>
+              </div>
+              <div id="signal-list" class="signal-list"></div>
+              <div class="panel-note">
+                A flagged flow needs review; it may also be normal traffic.
+              </div>
+            </article>
+          </div>
+          <article class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Recent flow records</h2>
+                <p>
+                  A separate row is stored for each direction and capture
+                  window.
+                </p>
+              </div>
+              <a href="#traffic" class="panel-link">View all records</a>
+            </div>
+            <div class="table-wrap" id="recent-table"></div>
+          </article>
+        </section>
+
+        <section
+          class="page"
+          id="page-traffic"
+          aria-label="Traffic records"
+          hidden
+        >
+          <p class="page-note">
+            Select <strong>Inspect</strong> to see the source and destination
+            ports, TCP flags, and detection results for a flow.
+          </p>
+          <article class="panel">
+            <div class="filter-bar">
+              <label class="filter-search" for="flow-search"
+                >Search<input
+                  id="flow-search"
+                  type="search"
+                  placeholder="IP address, port, or alert type"
+              /></label>
+              <label for="protocol-filter"
+                >Protocol<select id="protocol-filter">
+                  <option value="all">All protocols</option>
+                  <option>TCP</option>
+                  <option>UDP</option>
+                  <option>ICMP</option>
+                  <option>ICMPv6</option>
+                  <option>ARP</option>
+                  <option>OTHER</option>
+                </select></label
+              >
+              <label for="kind-filter"
+                >Records<select id="kind-filter">
+                  <option value="all">All flow records</option>
+                  <option value="flagged">Flagged flows</option>
+                  <option value="alerts">Rule alerts</option>
+                  <option value="ml">ML anomalies</option>
+                </select></label
+              >
+              <label for="sort-filter"
+                >Sort by<select id="sort-filter">
+                  <option value="newest">Newest first</option>
+                  <option value="oldest">Oldest first</option>
+                  <option value="bytes">Most traffic</option>
+                  <option value="risk">Highest score</option>
+                </select></label
+              >
+              <button class="button" id="export-csv">Export CSV</button>
+            </div>
+            <div class="table-wrap" id="flows-table"></div>
+            <div class="pagination">
+              <span id="flow-count">Loading flow records…</span>
+              <div>
+                <button class="button" id="prev-page">Previous</button
+                ><span id="page-number">1 / 1</span
+                ><button class="button" id="next-page">Next</button>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="page" id="page-detections" aria-label="Alerts" hidden>
+          <div class="three-grid" id="detection-metrics"></div>
+          <div class="detection-layout">
+            <article class="panel">
+              <div class="panel-heading">
+                <div>
+                  <h2>Flagged flow records</h2>
+                  <p>Recent matches in the selected time range</p>
+                </div>
+                <button class="panel-link" id="inspect-flagged">
+                  View all
+                </button>
+              </div>
+              <div id="detection-list"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-heading">
+                <div>
+                  <h2>Detection steps</h2>
+                  <p>How a capture window is analysed</p>
+                </div>
+              </div>
+              <ol class="explanation-list">
+                <li>
+                  <strong>Check flow rules.</strong> Look at packet rates, SYN
+                  and RST counts, ICMP traffic, and the number of destination
+                  ports.
+                </li>
+                <li>
+                  <strong>Run Isolation Forest.</strong> Check 14 numeric
+                  features for unusual combinations. The result is an outlier
+                  flag, not an attack probability.
+                </li>
+                <li>
+                  <strong>Check repeated behaviour.</strong> Compare the source
+                  with recent windows to see whether unusual activity continues.
+                </li>
+                <li>
+                  <strong>Record the result.</strong> Combine the evidence into
+                  a window score and save a simulated response decision.
+                </li>
+              </ol>
+              <div class="panel-note">
+                These checks can produce false positives. Inspect the flow
+                before drawing a conclusion.
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section
+          class="page"
+          id="page-responses"
+          aria-label="Response history"
+          hidden
+        >
+          <p class="page-note">
+            <strong>Simulation only:</strong> these are recorded decisions. The
+            project does not block traffic or change firewall rules.
+          </p>
+          <div class="three-grid" id="response-metrics"></div>
+          <article class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Window threat scores</h2>
+                <p>
+                  Latest 80 response events in the selected range · score out of
+                  100
+                </p>
+              </div>
+            </div>
+            <div id="threat-chart" class="line-chart"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Response records</h2>
+                <p>State changes and simulated actions for each window</p>
+              </div>
+            </div>
+            <div class="table-wrap" id="responses-table"></div>
+          </article>
+        </section>
+
+        <section
+          class="page"
+          id="page-lab"
+          aria-label="Computer Networks tools"
+          hidden
+        >
+          <p class="page-note">
+            Use these small calculations to demonstrate addressing and
+            error-control concepts. They run separately from packet capture.
+          </p>
+          <div class="two-grid">
+            <article class="panel">
+              <div class="panel-heading">
+                <div>
+                  <h2>Subnet calculator</h2>
+                  <p>IPv4 and IPv6 address ranges</p>
+                </div>
+              </div>
+              <form id="subnet-form" class="lab-form">
+                <label for="subnet-input">IP address / prefix length</label>
+                <div class="input-action">
+                  <input
+                    id="subnet-input"
+                    value="192.168.1.10/24"
+                    required
+                    autocomplete="off"
+                  /><button class="button primary">Calculate</button>
+                </div>
+              </form>
+              <div
+                class="lab-results"
+                id="subnet-results"
+                aria-live="polite"
+              ></div>
+            </article>
+            <article class="panel">
+              <div class="panel-heading">
+                <div>
+                  <h2>Error detection and correction</h2>
+                  <p>CRC, Internet checksum, and Hamming code</p>
+                </div>
+              </div>
+              <div class="lab-form">
+                <label for="error-method">Method</label
+                ><select id="error-method">
+                  <option value="crc">CRC (modulo-2 division)</option>
+                  <option value="checksum">Internet checksum (16-bit)</option>
+                  <option value="hamming">
+                    Hamming (7,4), even parity
+                  </option></select
+                ><label id="error-input-label" for="error-input"
+                  >Data bits</label
+                ><input id="error-input" value="1101011011" maxlength="256" />
+                <div id="generator-field">
+                  <label for="crc-generator"
+                    >Generator polynomial (binary)</label
+                  ><input id="crc-generator" value="10011" maxlength="32" />
+                </div>
+                <button class="button primary" id="calculate-error">
+                  Calculate
+                </button>
+              </div>
+              <div
+                id="error-results"
+                class="lab-results"
+                aria-live="polite"
+              ></div>
+            </article>
+          </div>
+          <article class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>OSI model reference</h2>
+                <p>Select a layer to see its connection to this project.</p>
+              </div>
+            </div>
+            <div class="osi-workbench">
+              <div class="osi-stack" id="osi-stack"></div>
+              <div class="osi-explanation" id="osi-explanation"></div>
+            </div>
+          </article>
+        </section>
+
+        <section
+          class="page"
+          id="page-project"
+          aria-label="Project details"
+          hidden
+        >
+          <article class="panel">
+            <div class="panel-heading">
+              <h2>
+                Real-Time Network Traffic Monitoring and Intrusion Detection
+                System
+              </h2>
+            </div>
+            <div class="project-text">
+              <p>
+                This Computer Networks project captures packets from a selected
+                network adapter, groups them into flows, and stores the results
+                in SQLite. The dashboard displays protocol statistics, traffic
+                rates, and possible intrusion indicators.
+              </p>
+              <p>
+                The main technologies are Python, Scapy, Flask, SQLite, Pandas,
+                and Scikit-learn. The interface uses HTML, CSS, and JavaScript.
+              </p>
+            </div>
+            <div class="table-wrap">
+              <table class="team-table">
+                <thead>
+                  <tr>
+                    <th>Team member</th>
+                    <th>Registration number</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Bhumireddi Rohit</td>
+                    <td>24BDS0387</td>
+                  </tr>
+                  <tr>
+                    <td>Parth Batra</td>
+                    <td>24BDS0416</td>
+                  </tr>
+                  <tr>
+                    <td>Somya Raj Singh Dalawat</td>
+                    <td>24BCE3001</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+          <div class="two-grid">
+            <article class="panel">
+              <div class="panel-heading"><h2>Implemented features</h2></div>
+              <ul class="feature-list">
+                <li>
+                  Capture and analyse IPv4, IPv6, TCP, UDP, ICMP, ICMPv6, ARP,
+                  and decoded DNS traffic.
+                </li>
+                <li>
+                  Display directional five-tuples, packet sizes, TCP flags, and
+                  estimated traffic rates.
+                </li>
+                <li>
+                  Check flow rules, destination-port fan-out, ML outliers, and
+                  repeated activity across windows.
+                </li>
+                <li>
+                  Search stored flows and export CSV records or a JSON summary.
+                </li>
+                <li>
+                  Demonstrate subnetting, CRC, Internet checksum, Hamming code,
+                  and OSI layers.
+                </li>
+              </ul>
+            </article>
+            <article class="panel">
+              <div class="panel-heading"><h2>Limitations</h2></div>
+              <ul class="feature-list">
+                <li>
+                  Traffic rate is calculated from captured bytes and time
+                  buckets. It is not a measurement of link capacity or
+                  application goodput.
+                </li>
+                <li>
+                  Latency and packet loss are not measured by the stored flow
+                  records.
+                </li>
+                <li>
+                  Common-port service labels are hints. DNS marked “decoded” was
+                  identified by Scapy. Encrypted payloads are not inspected.
+                </li>
+                <li>
+                  Routing and TCP congestion control are discussed as concepts,
+                  rather than implemented as protocols.
+                </li>
+                <li>
+                  The supplied ML dataset has 166 rows. It is a small academic
+                  baseline. Response actions are simulated.
+                </li>
+              </ul>
+            </article>
+          </div>
+        </section>
+        <footer class="main-footer">
+          <span>AegisNet · Computer Networks</span
+          ><span id="updated-label">Loading…</span>
+        </footer>
+      </main>
+    </div>
+    <dialog id="capture-dialog" class="modal">
+      <div class="dialog-heading">
+        <h2>Capture controls</h2>
+        <button
+          class="icon-button"
+          data-close-dialog="capture-dialog"
+          aria-label="Close capture controls"
+          data-icon="close"
+        ></button>
+      </div>
+      <p class="dialog-description">
+        Choose the Wi-Fi or Ethernet adapter carrying your traffic. Flow records
+        are saved locally and the dashboard refreshes every five seconds.
+      </p>
+      <div class="capture-status-card" id="capture-status-card"></div>
+      <label for="adapter-select">Network adapter</label
+      ><select id="adapter-select">
+        <option value="">Loading adapters…</option>
+      </select>
+      <p class="field-help">
+        Live capture on Windows requires Npcap and permission to access the
+        adapter. Monitor only networks you are authorised to use.
+      </p>
+      <div class="inline-message" id="capture-error" role="status" hidden></div>
+      <div class="dialog-actions">
+        <button class="button" data-close-dialog="capture-dialog">Close</button
+        ><button class="button danger" id="stop-capture">Stop capture</button
+        ><button class="button primary" id="start-capture">
+          Start capture
+        </button>
+      </div>
+      <details class="capture-help">
+        <summary>Capture or ML not starting?</summary>
+        <p>
+          Check <code>data/capture.log</code>. Run
+          <code>python main.py --train-model</code> if the ML model does not
+          load. On Windows, reopen the terminal as Administrator if Npcap
+          requires it.
+        </p>
+        <p>Saved records remain available when capture is stopped.</p>
+      </details>
+    </dialog>
+    <dialog id="flow-dialog" class="flow-dialog">
+      <div class="dialog-heading">
+        <h2 id="flow-dialog-title">Flow details</h2>
+        <button
+          class="icon-button"
+          data-close-dialog="flow-dialog"
+          aria-label="Close flow details"
+          data-icon="close"
+        ></button>
+      </div>
+      <div id="flow-detail"></div>
+      <div class="dialog-actions">
+        <button class="button" data-close-dialog="flow-dialog">Close</button>
+      </div>
+    </dialog>
+    <div id="toast" class="toast" role="status" hidden></div>
+  </body>
+</html>
